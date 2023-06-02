@@ -49,33 +49,119 @@ const sendData = (formData) => {
 
 export const App = () => {
 	const [email, setEmail] = useState('')
+	const [emailError, setEmailError] = useState(null)
 	const [password, setPassword] = useState('')
+	const [passwordError, setPasswordError] = useState(null)
 	const [repeatPassword, setRepeatPassword] = useState('')
+	const [repeatPasswordError, setRepeatPasswordError] = useState(null)
+
+	const onEmailChange = ({ target }) => {
+		setEmail(target.value)
+
+		let error = null
+		if (
+			!/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(
+				target.value
+			)
+		) {
+			error =
+				'Неверный Email. Адрес электронной почты должен содержать символы "@" и "."'
+		} else if (target.value.length > 20) {
+			error = 'Неверный Email. Допустимое количество символов не более 20.'
+		}
+
+		setEmailError(error)
+	}
+
+	const onEmailBlur = () => {
+		if (email.length < 6) {
+			setEmailError(
+				'Неверный Email. Допустимое количество символов не менее 6.'
+			)
+		}
+	}
+
+	const onPasswordChange = ({ target }) => {
+		setPassword(target.value)
+
+		let error = null
+		if (!/^[\w_]*$/.test(target.value)) {
+			error =
+				'Неверный Password. Допустимые символы: буквы, цифры и нижнее подчеркивание.'
+		} else if (target.value.length > 20) {
+			error = 'Неверный Password. Допустимое количество символов не более 20.'
+		} else if (target.value.length < 3) {
+			error = 'Неверный Password. Допустимое количество символов не менее 3.'
+		}
+
+		setPasswordError(error)
+	}
+
+	// const onPasswordBlur = () => {
+	// 	if (password.length < 3) {
+	// 		setEmailError(
+	// 			'Неверный Password. Допустимое количество символов не менее 3.'
+	// 		)
+	// 	}
+	// }
+
+	const onRepeatPasswordChange = ({ target }) => {
+		setRepeatPassword(target.value)
+
+		let error = null
+		if (!/^[\w_]*$/.test(target.value)) {
+			error =
+				'Неверный Password. Допустимые символы: буквы, цифры и нижнее подчеркивание.'
+		} else if (target.value.length > 20) {
+			error = 'Неверный Password. Допустимое количество символов не более 20.'
+		} else if (target.value.length < 3) {
+			error = 'Неверный Password. Допустимое количество символов не менее 3.'
+		}
+
+		setRepeatPasswordError(error)
+	}
+
+	// const onPasswordBlur = () => {
+	// 	if (password.length < 3) {
+	// 		setEmailError(
+	// 			'Неверный Password. Допустимое количество символов не менее 3.'
+	// 		)
+	// 	}
+	// }
 
 	const onSubmit = (e) => {
 		e.preventDefault()
-		const validPassword = password === repeatPassword ? password : null
-		sendData({ email, validPassword })
+		// const newPassword =
+		// 	password === repeatPassword ? password : 'Пароли не совпадают'
+		sendData({ email, password })
 	}
 
 	return (
 		<div className={styles.app}>
 			<div className={styles.authFormContainer}>
 				<p>Registration</p>
+				{emailError && <div className={styles.errorLabel}>{emailError}</div>}
+				{passwordError && (
+					<div className={styles.errorLabel}>{passwordError}</div>
+				)}
+				{passwordError && (
+					<div className={styles.errorLabel}>{passwordError}</div>
+				)}
 				<form className={styles.loginForm} onSubmit={onSubmit}>
 					<input
 						type="email"
 						name="email"
 						value={email}
 						placeholder="Email"
-						onChange={({ target }) => setEmail(target.value)}
+						onChange={onEmailChange}
+						onBlur={onEmailBlur}
 					/>
 					<input
 						type="password"
 						name="password"
 						value={password}
 						placeholder="Password"
-						onChange={({ target }) => setPassword(target.value)}
+						onChange={onPasswordChange}
 					/>
 
 					<input
@@ -83,10 +169,14 @@ export const App = () => {
 						name="password"
 						value={repeatPassword}
 						placeholder="Repeat Password"
-						onChange={({ target }) => setRepeatPassword(target.value)}
+						onChange={onRepeatPasswordChange}
 					/>
 
-					<button className={styles.button} type="submit">
+					<button
+						className={styles.button}
+						type="submit"
+						disabled={!!emailError || !!passwordError || !!repeatPasswordError}
+					>
 						Зарегистрироваться
 					</button>
 				</form>
@@ -98,8 +188,9 @@ export const App = () => {
 //! 2). Создание одного состояния с объектом для всех полей (оптимальный вариант)
 // const initialState = {
 // 	email: '',
-// 	login: '',
 // 	password: '',
+// 	repeatPassword: '',
+// 	emailError: null,
 // }
 
 // const useStore = () => {
@@ -128,43 +219,58 @@ export const App = () => {
 // 		sendData(getState())
 // 	}
 
-// 	const { email, login, password } = getState()
+// 	const { email, password, repeatPassword, emailError } = getState()
 
 // 	const onChange = ({ target }) => upDateState(target.name, target.value)
 
 // 	return (
 // 		<div className={styles.app}>
-// 			<form onSubmit={onSubmit}>
-// 				<input
-// 					type="email"
-// 					name="email"
-// 					value={email}
-// 					placeholder="Почта"
-// 					onChange={onChange}
-// 				/>
-// 				<input
-// 					type="text"
-// 					name="login"
-// 					value={login}
-// 					placeholder="Логин"
-// 					onChange={onChange}
-// 				/>
-// 				<input
-// 					type="password"
-// 					name="password"
-// 					value={password}
-// 					placeholder="Пароль"
-// 					onChange={onChange}
-// 				/>
-// 				<button type="reset" onClick={resetState}>Сброс</button>
-// 				<button type="submit">Отправить</button>
-// 			</form>
+// 			<div className={styles.authFormContainer}>
+// 				{emailError && <div className={styles.errorLabel}>{emailError}</div>}
+// 				<p>Registration</p>
+// 				<form className={styles.loginForm} onSubmit={onSubmit}>
+// 					<input
+// 						type="email"
+// 						name="email"
+// 						value={email}
+// 						placeholder="Email"
+// 						onChange={onChange}
+// 						// onChange={onEmailChange}
+// 						// onBlur={onEmailBlur}
+// 					/>
+// 					<input
+// 						type="password"
+// 						name="password"
+// 						value={password}
+// 						placeholder="Password"
+// 						onChange={onChange}
+// 					/>
+// 					<input
+// 						type="password"
+// 						name="repeatPassword"
+// 						value={repeatPassword}
+// 						placeholder="Repeat Password"
+// 						onChange={onChange}
+// 					/>
+// 					<button className={styles.button} type="reset" onClick={resetState}>
+// 						Сброс
+// 					</button>
+// 					<button
+// 						className={styles.button}
+// 						type="submit"
+// 						disabled={!!emailError}
+// 					>
+// 						Зарегистрироваться
+// 					</button>
+// 				</form>
+// 			</div>
 // 		</div>
 // 	)
 // }
 
 //! Создание контроллируемого (с атрибутами value и onChange) одиночного селекта и мульти селекта
-// export const App = () => {
+
+//  export const App = () => {
 // 	const [selectedProduct, setSelectedProduct] = useState('tv')
 // 	const [selectedColors, setSelectedColors] = useState(['black', 'silver'])
 
