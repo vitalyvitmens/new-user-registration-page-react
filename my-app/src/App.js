@@ -50,13 +50,13 @@ export const App = () => {
 		setPassword(target.value)
 
 		let error = null
-		if (!/^[\w_]*$/.test(target.value)) {
+		if (
+			!/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,20}/.test(
+				target.value
+			)
+		) {
 			error =
-				'Неверный Password. Допустимые символы: буквы, цифры и нижнее подчеркивание.'
-		} else if (target.value.length > 20) {
-			error = 'Неверный Password. Допустимое количество символов не более 20.'
-		} else if (target.value.length < 3) {
-			error = 'Неверный Password. Допустимое количество символов не менее 3.'
+				'Пароль должен содержать от 6 до 20 символов, должна быть хотя бы одна цифра, один спецсимвол, одна латинская буква в нижнем регистре и одна латинская буква в верхнем регистре.'
 		}
 
 		setPasswordError(error)
@@ -91,7 +91,7 @@ export const App = () => {
 
 	const onSubmit = (e) => {
 		e.preventDefault()
-		sendData({ email, password })
+		sendData({ email, repeatPassword })
 	}
 
 	return (
@@ -133,7 +133,14 @@ export const App = () => {
 					<button
 						className={styles.button}
 						type="submit"
-						disabled={!!emailError || !!passwordError || !!repeatPasswordError}
+						disabled={
+							!email ||
+							!password ||
+							!repeatPassword ||
+							!!emailError ||
+							!!passwordError ||
+							!!repeatPasswordError
+						}
 					>
 						Зарегистрироваться
 					</button>
