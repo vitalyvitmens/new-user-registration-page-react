@@ -43,49 +43,57 @@ import styles from './app.module.css'
 
 //! Хранение состояния формы в котором больше 1 поля:
 //! 1). Создание состояний для каждого поля
-// const sendData = (formData) => {
-// 	console.log(formData)
-// }
+const sendData = (formData) => {
+	console.log(formData)
+}
 
-// export const App = () => {
-// 	const [email, setEmail] = useState('')
-// 	const [login, setLogin] = useState('')
-// 	const [password, setPassword] = useState('')
+export const App = () => {
+	const [email, setEmail] = useState('')
+	const [password, setPassword] = useState('')
+	const [repeatPassword, setRepeatPassword] = useState('')
 
-// 	const onSubmit = (e) => {
-// 		e.preventDefault()
-// 		sendData({ email, login, password })
-// 	}
+	const onSubmit = (e) => {
+		e.preventDefault()
+		const validPassword = password === repeatPassword ? password : null
+		sendData({ email, validPassword })
+	}
 
-// 	return (
-// 		<div className={styles.app}>
-// 			<form onSubmit={onSubmit}>
-// 				<input
-// 					type="email"
-// 					name="email"
-// 					value={email}
-// 					placeholder="Почта"
-// 					onChange={({ target }) => setEmail(target.value)}
-// 				/>
-// 				<input
-// 					type="text"
-// 					name="login"
-// 					value={login}
-// 					placeholder="Логин"
-// 					onChange={({ target }) => setLogin(target.value)}
-// 				/>
-// 				<input
-// 					type="password"
-// 					name="password"
-// 					value={password}
-// 					placeholder="Пароль"
-// 					onChange={({ target }) => setPassword(target.value)}
-// 				/>
-// 				<button type="submit">Отправить</button>
-// 			</form>
-// 		</div>
-// 	)
-// }
+	return (
+		<div className={styles.app}>
+			<div className={styles.authFormContainer}>
+				<p>Registration</p>
+				<form className={styles.loginForm} onSubmit={onSubmit}>
+					<input
+						type="email"
+						name="email"
+						value={email}
+						placeholder="Email"
+						onChange={({ target }) => setEmail(target.value)}
+					/>
+					<input
+						type="password"
+						name="password"
+						value={password}
+						placeholder="Password"
+						onChange={({ target }) => setPassword(target.value)}
+					/>
+
+					<input
+						type="password"
+						name="password"
+						value={repeatPassword}
+						placeholder="Repeat Password"
+						onChange={({ target }) => setRepeatPassword(target.value)}
+					/>
+
+					<button className={styles.button} type="submit">
+						Зарегистрироваться
+					</button>
+				</form>
+			</div>
+		</div>
+	)
+}
 
 //! 2). Создание одного состояния с объектом для всех полей (оптимальный вариант)
 // const initialState = {
@@ -434,44 +442,44 @@ import styles from './app.module.css'
 //! import { useForm } from 'react-hook-form'
 //! import { yupResolver } from '@hookform/resolvers/yup'
 //! https://react-hook-form.com/get-started
-const fieldScheme = yup.object().shape({
-	login: yup
-		.string()
-		.matches(
-			/^[\w_]*$/,
-			'Неверный логин. Допустимые символы: буквы, цифры и нижнее подчеркивание.'
-		)
-		.max(20, 'Неверный логин. Допустимое количество символов не более 20.')
-		.min(3, 'Неверный логин. Допустимое количество символов не менее 3.'),
-})
+// const fieldScheme = yup.object().shape({
+// 	login: yup
+// 		.string()
+// 		.matches(
+// 			/^[\w_]*$/,
+// 			'Неверный логин. Допустимые символы: буквы, цифры и нижнее подчеркивание.'
+// 		)
+// 		.max(20, 'Неверный логин. Допустимое количество символов не более 20.')
+// 		.min(3, 'Неверный логин. Допустимое количество символов не менее 3.'),
+// })
 
-export const App = () => {
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm({
-		defaultValues: {
-			login: '',
-		},
-		resolver: yupResolver(fieldScheme),
-	})
+// export const App = () => {
+// 	const {
+// 		register,
+// 		handleSubmit,
+// 		formState: { errors },
+// 	} = useForm({
+// 		defaultValues: {
+// 			login: '',
+// 		},
+// 		resolver: yupResolver(fieldScheme),
+// 	})
 
-	const loginError = errors.login?.message
+// 	const loginError = errors.login?.message
 
-	const sendFormData = (formData) => {
-		console.log(formData)
-	}
+// 	const sendFormData = (formData) => {
+// 		console.log(formData)
+// 	}
 
-	return (
-		<div className={styles.app}>
-			<form onSubmit={handleSubmit(sendFormData)}>
-				{loginError && <div className={styles.errorLabel}>{loginError}</div>}
-				<input name="login" type="text" {...register('login')} />
-				<button type="submit" disabled={!!loginError}>
-					Отправить
-				</button>
-			</form>
-		</div>
-	)
-}
+// 	return (
+// 		<div className={styles.app}>
+// 			<form onSubmit={handleSubmit(sendFormData)}>
+// 				{loginError && <div className={styles.errorLabel}>{loginError}</div>}
+// 				<input name="login" type="text" {...register('login')} />
+// 				<button type="submit" disabled={!!loginError}>
+// 					Отправить
+// 				</button>
+// 			</form>
+// 		</div>
+// 	)
+// }

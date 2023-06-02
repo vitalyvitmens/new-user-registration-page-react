@@ -1,18 +1,66 @@
 .app {
 	text-align: center;
+	display: flex;
+	min-height: 100vh;
+	align-items: center;
+	justify-content: center;
+	color: white;
+	background-image: linear-gradient(79deg, #7439db, #c66fbc 48%, #f7944d);
 }
 
-.content {
-	display: none;
+.authFormContainer,
+.loginForm,
+.registerForm {
+	display: flex;
+	flex-direction: column;
 }
 
-input[type='checkbox']:checked + .content {
-	display: block;
+@media screen and (min-width: 600px) {
+	.authFormContainer {
+		padding: 4rem;
+		border: 1px solid white;
+		border-radius: 10px;
+		margin: 0.5rem;
+	}
+}
+
+p {
+	font-size: 2.5rem;
+	font-weight: 600;
+	color: blue;
+	margin-top: 0;
+}
+
+input {
+	margin: 0.5rem 0;
+	padding: 1rem;
+	border: none;
+	border-radius: 10px;
+}
+
+.button {
+	border: 2px solid blue;
+	border-radius: 10px;
+	background-color: rgb(252, 252, 179);
+	padding: 20px;
+	cursor: pointer;
+	color: black;
+	font-size: 1.25rem;
+	font-weight: 500;
+	margin-top: 40px;
+}
+
+.button:hover {
+	opacity: 0.75;
+}
+
+.button:active {
+	opacity: 0.5;
 }
 
 .errorLabel {
 	padding: 10px;
-  margin: auto;
+	margin: auto;
 	color: red;
 	font-size: 1.25rem;
 	font-weight: bold;
