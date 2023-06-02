@@ -8,41 +8,6 @@ import styles from './app.module.css'
 // import PropTypes from 'prop-types'
 // import { useState } from 'react'
 
-//! Котролируемое поле формы imput в react
-// export const App = () => {
-// 	const [value, setValue] = useState('')
-// 	return (
-// 		<div className={styles.app}>
-// 			<input
-// 				type="text"
-// 				value={value}
-// 				onChange={({ target }) => setValue(target.value)}
-// 			/>
-// 		</div>
-// 	)
-// }
-
-//! Не котролируемое поле формы imput в react
-// export const App = () => {
-// 	return (
-// 		<div className={styles.app}>
-// 			<input type="text" />
-// 		</div>
-// 	)
-// }
-
-//! Котроль поля imput при помощи css см. app.module.css
-// export const App = () => {
-// 	return (
-// 		<div className={styles.app}>
-// 			<input type="checkbox" />
-// 			<div className={styles.content}>Любой контент</div>
-// 		</div>
-// 	)
-// }
-
-//! Хранение состояния формы в котором больше 1 поля:
-//! 1). Создание состояний для каждого поля
 const sendData = (formData) => {
 	console.log(formData)
 }
@@ -65,7 +30,7 @@ export const App = () => {
 			)
 		) {
 			error =
-				'Неверный Email. Адрес электронной почты должен содержать символы "@" и "."'
+				'Неверный Email. Адрес электронной почты должен содержать латинские буквы и символы "@", "."'
 		} else if (target.value.length > 20) {
 			error = 'Неверный Email. Допустимое количество символов не более 20.'
 		}
@@ -109,13 +74,8 @@ export const App = () => {
 		setRepeatPassword(target.value)
 
 		let error = null
-		if (!/^[\w_]*$/.test(target.value)) {
-			error =
-				'Неверный Password. Допустимые символы: буквы, цифры и нижнее подчеркивание.'
-		} else if (target.value.length > 20) {
-			error = 'Неверный Password. Допустимое количество символов не более 20.'
-		} else if (target.value.length < 3) {
-			error = 'Неверный Password. Допустимое количество символов не менее 3.'
+		if (target.value !== password) {
+			error = 'Пароли не совпадают'
 		}
 
 		setRepeatPasswordError(error)
@@ -131,8 +91,6 @@ export const App = () => {
 
 	const onSubmit = (e) => {
 		e.preventDefault()
-		// const newPassword =
-		// 	password === repeatPassword ? password : 'Пароли не совпадают'
 		sendData({ email, password })
 	}
 
@@ -144,8 +102,8 @@ export const App = () => {
 				{passwordError && (
 					<div className={styles.errorLabel}>{passwordError}</div>
 				)}
-				{passwordError && (
-					<div className={styles.errorLabel}>{passwordError}</div>
+				{repeatPasswordError && (
+					<div className={styles.errorLabel}>{repeatPasswordError}</div>
 				)}
 				<form className={styles.loginForm} onSubmit={onSubmit}>
 					<input
