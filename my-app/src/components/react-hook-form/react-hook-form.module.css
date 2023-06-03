@@ -1,6 +1,5 @@
 .authFormContainer,
-.loginForm,
-.registerForm {
+.form {
 	display: flex;
 	flex-direction: column;
 }

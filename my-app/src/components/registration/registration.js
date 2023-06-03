@@ -92,7 +92,7 @@ export const Registration = () => {
 	return (
 		<div className={styles.authFormContainer}>
 			<p>Registration</p>
-			<form className={styles.loginForm} onSubmit={onSubmit}>
+			<form className={styles.form} onSubmit={onSubmit}>
 				{emailError && <div className={styles.errorLabel}>{emailError}</div>}
 				<input
 					type="text"
