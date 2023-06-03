@@ -1,11 +1,11 @@
 import { useForm } from 'react-hook-form'
-import * as yup from 'yup'
 import styles from './react-hook-form.module.css'
 
 export const ReactHookForm = () => {
 	const {
 		register,
 		handleSubmit,
+		watch,
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
@@ -49,9 +49,10 @@ export const ReactHookForm = () => {
 	}
 
 	const repeatPasswordProps = {
-		pattern: {
-			value: 'password' !== 'repeatPassword',
-			message: 'Пароли не совпадают',
+		validate: (value) => {
+			if (watch('password') !== value) {
+				return 'Пароли не совпадают'
+			}
 		},
 	}
 
@@ -59,8 +60,8 @@ export const ReactHookForm = () => {
 	const passwordError = errors.password?.message
 	const repeatPasswordError = errors.repeatPassword?.message
 
-	const onSubmit = (formData) => {
-		console.log(formData)
+	const onSubmit = ({ email, password }) => {
+		console.log({ email, password })
 	}
 
 	return (
