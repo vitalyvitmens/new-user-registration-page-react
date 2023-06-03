@@ -107,7 +107,7 @@ export const ReactHookForm = () => {
 			)}
 			<form className={styles.loginForm} onSubmit={onSubmit}>
 				<input
-					type="email"
+					type="text"
 					name="email"
 					value={email}
 					placeholder="Email"

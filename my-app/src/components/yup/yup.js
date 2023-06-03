@@ -1,8 +1,49 @@
+import * as yup from 'yup'
 import { useState, useRef } from 'react'
 import styles from './yup.module.css'
 
 const sendData = (formData) => {
 	console.log(formData)
+}
+
+const emailChangeScheme = yup
+	.string()
+	.max(20, 'Допустимое количество символов не более 20')
+
+const emailBlurScheme = yup
+	.string()
+	.min(6, 'Допустимое количество символов не менее 6')
+	.matches(
+		/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/,
+		'Email должен содержать латинские буквы и символы "@" "."'
+	)
+
+const passwordChangeScheme = yup
+	.string()
+	.max(20, 'Допустимое количество символов не более 20')
+
+const passwordBlurScheme = yup
+	.string()
+	.min(3, 'Допустимое количество символов не менее 3')
+	.matches(
+		/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,20}/,
+		'Пароль должен содержать от 6 до 20 символов, иметь хотя бы одну цифру, один спецсимвол, одну латинскую букву в нижнем регистре и одну в верхнем регистре'
+	)
+
+const repeatPasswordChangeScheme = yup
+	.string()
+	.oneOf([yup.ref('repeatPassword')], 'Пароли не совпадают')
+
+const validateAndGetErrorMessage = (scheme, value) => {
+	let errorMessage = null
+
+	try {
+		scheme.validateSync(value, { abortEarly: false })
+	} catch ({ errors }) {
+		errorMessage = errors.join('\n')
+	}
+
+	return errorMessage
 }
 
 export const Yup = () => {
@@ -18,77 +59,41 @@ export const Yup = () => {
 	const onEmailChange = ({ target }) => {
 		setEmail(target.value)
 
-		let error = null
-		if (
-			!/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(
-				target.value
-			)
-		) {
-			error =
-				'Неверный Email. Адрес электронной почты должен содержать латинские буквы и символы "@", "."'
-		} else if (target.value.length > 20) {
-			error = 'Неверный Email. Допустимое количество символов не более 20.'
-		}
+		const error = validateAndGetErrorMessage(emailChangeScheme, target.value)
 
 		setEmailError(error)
 	}
 
 	const onEmailBlur = () => {
-		if (email.length < 6) {
-			setEmailError(
-				'Неверный Email. Допустимое количество символов не менее 6.'
-			)
-		}
+		const error = validateAndGetErrorMessage(emailBlurScheme, email)
+
+		setEmailError(error)
 	}
 
 	const onPasswordChange = ({ target }) => {
 		setPassword(target.value)
 
-		let error = null
-		if (
-			!/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,20}/.test(
-				target.value
-			)
-		) {
-			error =
-				'Пароль должен содержать от 6 до 20 символов, должна быть хотя бы одна цифра, один спецсимвол, одна латинская буква в нижнем регистре и одна латинская буква в верхнем регистре.'
-		} else if (target.value.length > 20) {
-			error = 'Допустимое количество символов не более 20.'
-		} else if (target.value === repeatPassword) {
-			submitButtonRef.current.focus()
-		}
+		const error = validateAndGetErrorMessage(passwordChangeScheme, target.value)
 
 		setPasswordError(error)
 	}
 
-	// const onPasswordBlur = () => {
-	// 	if (password.length < 3) {
-	// 		setEmailError(
-	// 			'Неверный Password. Допустимое количество символов не менее 3.'
-	// 		)
-	// 	}
-	// }
+	const onPasswordBlur = () => {
+		const error = validateAndGetErrorMessage(passwordBlurScheme, password)
+
+		setEmailError(error)
+	}
 
 	const onRepeatPasswordChange = ({ target }) => {
 		setRepeatPassword(target.value)
 
-		let error = null
-		if (target.value === password) {
-			submitButtonRef.current.focus()
-		} else {
-			error = 'Пароли не совпадают'
-		}
+		const error = validateAndGetErrorMessage(
+			repeatPasswordChangeScheme,
+			target.value
+		)
 
 		setRepeatPasswordError(error)
 	}
-
-	// const onPasswordBlur = () => {
-	// 	if (password.length < 3) {
-	// 		setEmailError(
-	// 			'Неверный Password. Допустимое количество символов не менее 3.'
-	// 		)
-	// 	}
-	// }
 
 	const onSubmit = (e) => {
 		e.preventDefault()
@@ -98,29 +103,30 @@ export const Yup = () => {
 	return (
 		<div className={styles.authFormContainer}>
 			<p>Yup</p>
-			{emailError && <div className={styles.errorLabel}>{emailError}</div>}
-			{passwordError && (
-				<div className={styles.errorLabel}>{passwordError}</div>
-			)}
-			{repeatPasswordError && (
-				<div className={styles.errorLabel}>{repeatPasswordError}</div>
-			)}
 			<form className={styles.loginForm} onSubmit={onSubmit}>
+				{emailError && <div className={styles.errorLabel}>{emailError}</div>}
 				<input
-					type="email"
+					type="text"
 					name="email"
 					value={email}
 					placeholder="Email"
 					onChange={onEmailChange}
 					onBlur={onEmailBlur}
 				/>
+				{passwordError && (
+					<div className={styles.errorLabel}>{passwordError}</div>
+				)}
 				<input
 					type="password"
 					name="password"
 					value={password}
 					placeholder="Password"
 					onChange={onPasswordChange}
+					onBlur={onPasswordBlur}
 				/>
+				{repeatPasswordError && (
+					<div className={styles.errorLabel}>{repeatPasswordError}</div>
+				)}
 				<input
 					type="password"
 					name="repeatPassword"

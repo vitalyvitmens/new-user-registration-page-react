@@ -19,15 +19,8 @@ export const Registration = () => {
 		setEmail(target.value)
 
 		let error = null
-		if (
-			!/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(
-				target.value
-			)
-		) {
-			error =
-				'Неверный Email. Адрес электронной почты должен содержать латинские буквы и символы "@", "."'
-		} else if (target.value.length > 20) {
-			error = 'Неверный Email. Допустимое количество символов не более 20.'
+		if (target.value.length > 20) {
+			error = 'Допустимое количество символов не более 20'
 		}
 
 		setEmailError(error)
@@ -35,9 +28,13 @@ export const Registration = () => {
 
 	const onEmailBlur = () => {
 		if (email.length < 6) {
-			setEmailError(
-				'Неверный Email. Допустимое количество символов не менее 6.'
+			setEmailError('Допустимое количество символов не менее 6')
+		} else if (
+			!/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(
+				email
 			)
+		) {
+			setEmailError('Email должен содержать латинские буквы и символы "@" "."')
 		}
 	}
 
@@ -45,50 +42,47 @@ export const Registration = () => {
 		setPassword(target.value)
 
 		let error = null
-		if (
-			!/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,20}/.test(
-				target.value
-			)
-		) {
-			error =
-				'Пароль должен содержать от 6 до 20 символов, должна быть хотя бы одна цифра, один спецсимвол, одна латинская буква в нижнем регистре и одна латинская буква в верхнем регистре.'
-		} else if (target.value.length > 20) {
-			error = 'Допустимое количество символов не более 20.'
-		} else if (target.value === repeatPassword) {
-			submitButtonRef.current.focus()
-		}
+		if (password) {
+			if (target.value.length > 20) {
+				error = 'Допустимое количество символов не более 20'
+			} else if (target.value === repeatPassword) {
+				submitButtonRef.current.focus()
+			}
 
-		setPasswordError(error)
+			setPasswordError(error)
+		}
 	}
 
-	// const onPasswordBlur = () => {
-	// 	if (password.length < 3) {
-	// 		setEmailError(
-	// 			'Неверный Password. Допустимое количество символов не менее 3.'
-	// 		)
-	// 	}
-	// }
+	const onPasswordBlur = () => {
+		if (password) {
+			if (password.length < 3) {
+				setPasswordError('Допустимое количество символов не менее 3')
+			} else if (
+				!/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,20}/.test(
+					password
+				)
+			) {
+				setPasswordError(
+					'Пароль должен содержать от 6 до 20 символов, иметь хотя бы одну цифру, один спецсимвол, одну латинскую букву в нижнем регистре и одну в верхнем регистре'
+				)
+			}
+		}
+	}
 
 	const onRepeatPasswordChange = ({ target }) => {
 		setRepeatPassword(target.value)
 
 		let error = null
-		if (target.value === password) {
-			submitButtonRef.current.focus()
-		} else {
-			error = 'Пароли не совпадают'
+		if (target.value) {
+			if (target.value !== password) {
+				error = 'Пароли не совпадают'
+			} else {
+				submitButtonRef.current.focus()
+			}
+
+			setRepeatPasswordError(error)
 		}
-
-		setRepeatPasswordError(error)
 	}
-
-	// const onPasswordBlur = () => {
-	// 	if (password.length < 3) {
-	// 		setEmailError(
-	// 			'Неверный Password. Допустимое количество символов не менее 3.'
-	// 		)
-	// 	}
-	// }
 
 	const onSubmit = (e) => {
 		e.preventDefault()
@@ -98,29 +92,30 @@ export const Registration = () => {
 	return (
 		<div className={styles.authFormContainer}>
 			<p>Registration</p>
-			{emailError && <div className={styles.errorLabel}>{emailError}</div>}
-			{passwordError && (
-				<div className={styles.errorLabel}>{passwordError}</div>
-			)}
-			{repeatPasswordError && (
-				<div className={styles.errorLabel}>{repeatPasswordError}</div>
-			)}
 			<form className={styles.loginForm} onSubmit={onSubmit}>
+				{emailError && <div className={styles.errorLabel}>{emailError}</div>}
 				<input
-					type="email"
+					type="text"
 					name="email"
 					value={email}
 					placeholder="Email"
 					onChange={onEmailChange}
 					onBlur={onEmailBlur}
 				/>
+				{passwordError && (
+					<div className={styles.errorLabel}>{passwordError}</div>
+				)}
 				<input
 					type="password"
 					name="password"
 					value={password}
 					placeholder="Password"
 					onChange={onPasswordChange}
+					onBlur={onPasswordBlur}
 				/>
+				{repeatPasswordError && (
+					<div className={styles.errorLabel}>{repeatPasswordError}</div>
+				)}
 				<input
 					type="password"
 					name="repeatPassword"
@@ -133,13 +128,10 @@ export const Registration = () => {
 					ref={submitButtonRef}
 					type="submit"
 					disabled={
-						!email ||
 						!password ||
-						password === '' ||
-						!repeatPassword ||
-						!!emailError ||
-						!!passwordError
-						|| password === '' || password !== repeatPassword
+						password !== repeatPassword ||
+						emailError ||
+						passwordError
 					}
 				>
 					Зарегистрироваться
