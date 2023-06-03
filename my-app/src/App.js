@@ -1,4 +1,9 @@
-import { Registration, ReactHookForm, Yup } from './components'
+import {
+	Registration,
+	ReactHookForm,
+	Yup,
+	ReactHookFormWithYup,
+} from './components'
 import styles from './app.module.css'
 
 export const App = () => {
@@ -6,8 +11,9 @@ export const App = () => {
 		<>
 			<div className={styles.app}>
 				<Registration />
-				<ReactHookForm />
 				<Yup />
+				<ReactHookForm />
+				<ReactHookFormWithYup />
 			</div>
 		</>
 	)
