@@ -127,11 +127,19 @@ export const Registration = () => {
 					className={styles.button}
 					ref={submitButtonRef}
 					type="submit"
+					// disabled={
+					// 	!password ||
+					// 	password !== repeatPassword ||
+					// 	emailError ||
+					// 	passwordError
+					// }
 					disabled={
+						!email ||
 						!password ||
-						password !== repeatPassword ||
-						emailError ||
-						passwordError
+						password === '' ||
+						!repeatPassword ||
+						!!emailError ||
+						!!passwordError
 					}
 				>
 					Зарегистрироваться

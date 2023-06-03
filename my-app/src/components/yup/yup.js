@@ -6,6 +6,34 @@ const sendData = (formData) => {
 	console.log(formData)
 }
 
+// const validationChangeScheme = yup.object().shape({
+// 	email: yup.string().max(20, 'Допустимое количество символов не более 20'),
+// 	password: yup.string().max(20, 'Допустимое количество символов не более 20'),
+// 	repeatPassword: yup
+// 		.string()
+// 		.oneOf([yup.ref('password'), null], 'Пароли не совпадают'),
+// })
+
+// const validationBlurScheme = yup.object().shape({
+// 	email: yup
+// 		.string()
+// 		.min(6, 'Допустимое количество символов не менее 6')
+// 		.matches(
+// 			/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/,
+// 			'Email должен содержать латинские буквы и символы "@" "."'
+// 		),
+// 	password: yup
+// 		.string()
+// 		.min(3, 'Допустимое количество символов не менее 3')
+// 		.matches(
+// 			/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,20}/,
+// 			'Пароль должен содержать от 6 до 20 символов, иметь хотя бы одну цифру, один спецсимвол, одну латинскую букву в нижнем регистре и одну в верхнем регистре'
+// 		),
+// 	repeatPassword: yup
+// 		.string()
+// 		.oneOf([yup.ref('password'), null], 'Пароли не совпадают'),
+// })
+
 const emailChangeScheme = yup
 	.string()
 	.max(20, 'Допустимое количество символов не более 20')
@@ -30,9 +58,9 @@ const passwordBlurScheme = yup
 		'Пароль должен содержать от 6 до 20 символов, иметь хотя бы одну цифру, один спецсимвол, одну латинскую букву в нижнем регистре и одну в верхнем регистре'
 	)
 
-const repeatPasswordChangeScheme = yup
-	.string()
-	.oneOf([yup.ref('repeatPassword')], 'Пароли не совпадают')
+// const repeatPasswordChangeScheme = yup
+// 	.string()
+// 	.oneOf([yup.ref('password')], 'Пароли не совпадают')
 
 const validateAndGetErrorMessage = (scheme, value) => {
 	let errorMessage = null
@@ -84,15 +112,30 @@ export const Yup = () => {
 		setEmailError(error)
 	}
 
+	// const onRepeatPasswordChange = ({ target }) => {
+	// 	setRepeatPassword(target.value)
+
+	// 	const error = validateAndGetErrorMessage(
+	// 		repeatPasswordChangeScheme,
+	// 		target.value
+	// 	)
+
+	// 	setRepeatPasswordError(error)
+	// }
+
 	const onRepeatPasswordChange = ({ target }) => {
 		setRepeatPassword(target.value)
 
-		const error = validateAndGetErrorMessage(
-			repeatPasswordChangeScheme,
-			target.value
-		)
+		let error = null
+		if (target.value) {
+			if (target.value !== password) {
+				error = 'Пароли не совпадают'
+			} else {
+				submitButtonRef.current.focus()
+			}
 
-		setRepeatPasswordError(error)
+			setRepeatPasswordError(error)
+		}
 	}
 
 	const onSubmit = (e) => {
@@ -145,7 +188,6 @@ export const Yup = () => {
 						!repeatPassword ||
 						!!emailError ||
 						!!passwordError
-						// password === '' || password !== repeatPassword
 					}
 				>
 					Зарегистрироваться
