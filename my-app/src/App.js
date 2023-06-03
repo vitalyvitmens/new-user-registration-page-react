@@ -1,154 +1,23 @@
+import { Registration, ReactHookForm, Yup } from './components'
 import { useState, useRef } from 'react'
+import styles from './app.module.css'
 import Select from 'react-select'
 import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import styles from './app.module.css'
 // import logo from './logo.svg'
 // import PropTypes from 'prop-types'
 // import { useState } from 'react'
 
-const sendData = (formData) => {
-	console.log(formData)
-}
-
 export const App = () => {
-	const [email, setEmail] = useState('')
-	const [emailError, setEmailError] = useState(null)
-	const [password, setPassword] = useState('')
-	const [passwordError, setPasswordError] = useState(null)
-	const [repeatPassword, setRepeatPassword] = useState('')
-	const [repeatPasswordError, setRepeatPasswordError] = useState(null)
-
-	const onEmailChange = ({ target }) => {
-		setEmail(target.value)
-
-		let error = null
-		if (
-			!/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(
-				target.value
-			)
-		) {
-			error =
-				'Неверный Email. Адрес электронной почты должен содержать латинские буквы и символы "@", "."'
-		} else if (target.value.length > 20) {
-			error = 'Неверный Email. Допустимое количество символов не более 20.'
-		}
-
-		setEmailError(error)
-	}
-
-	const onEmailBlur = () => {
-		if (email.length < 6) {
-			setEmailError(
-				'Неверный Email. Допустимое количество символов не менее 6.'
-			)
-		}
-	}
-
-	const onPasswordChange = ({ target }) => {
-		setPassword(target.value)
-
-		let error = null
-		if (
-			!/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,20}/.test(
-				target.value
-			)
-		) {
-			error =
-				'Пароль должен содержать от 6 до 20 символов, должна быть хотя бы одна цифра, один спецсимвол, одна латинская буква в нижнем регистре и одна латинская буква в верхнем регистре.'
-		} else if (target.value.length > 20) {
-			error = 'Допустимое количество символов не более 20.'
-		}
-
-		setPasswordError(error)
-	}
-
-	// const onPasswordBlur = () => {
-	// 	if (password.length < 3) {
-	// 		setEmailError(
-	// 			'Неверный Password. Допустимое количество символов не менее 3.'
-	// 		)
-	// 	}
-	// }
-
-	const onRepeatPasswordChange = ({ target }) => {
-		setRepeatPassword(target.value)
-
-		let error = null
-		if (target.value !== password) {
-			error = 'Пароли не совпадают'
-		}
-
-		setRepeatPasswordError(error)
-	}
-
-	// const onPasswordBlur = () => {
-	// 	if (password.length < 3) {
-	// 		setEmailError(
-	// 			'Неверный Password. Допустимое количество символов не менее 3.'
-	// 		)
-	// 	}
-	// }
-
-	const onSubmit = (e) => {
-		e.preventDefault()
-		sendData({ email, repeatPassword })
-	}
-
 	return (
-		<div className={styles.app}>
-			<div className={styles.authFormContainer}>
-				<p>Registration</p>
-				{emailError && <div className={styles.errorLabel}>{emailError}</div>}
-				{passwordError && (
-					<div className={styles.errorLabel}>{passwordError}</div>
-				)}
-				{repeatPasswordError && (
-					<div className={styles.errorLabel}>{repeatPasswordError}</div>
-				)}
-				<form className={styles.loginForm} onSubmit={onSubmit}>
-					<input
-						type="email"
-						name="email"
-						value={email}
-						placeholder="Email"
-						onChange={onEmailChange}
-						onBlur={onEmailBlur}
-					/>
-					<input
-						type="password"
-						name="password"
-						value={password}
-						placeholder="Password"
-						onChange={onPasswordChange}
-					/>
-
-					<input
-						type="password"
-						name="password"
-						value={repeatPassword}
-						placeholder="Repeat Password"
-						onChange={onRepeatPasswordChange}
-					/>
-
-					<button
-						className={styles.button}
-						type="submit"
-						disabled={
-							!email ||
-							!password ||
-							!repeatPassword ||
-							!!emailError ||
-							!!passwordError ||
-							!!repeatPasswordError
-						}
-					>
-						Зарегистрироваться
-					</button>
-				</form>
+		<>
+			<div className={styles.app}>
+				<Registration />
+				<ReactHookForm />
+				<Yup />
 			</div>
-		</div>
+		</>
 	)
 }
 
