@@ -16,6 +16,7 @@ export const ReactHookForm = () => {
 	})
 
 	const emailProps = {
+		required: 'Обязательное поле',
 		minLength: {
 			value: 6,
 			message: 'Допустимое количество символов не менее 6',
@@ -32,6 +33,7 @@ export const ReactHookForm = () => {
 	}
 
 	const passwordProps = {
+		required: 'Обязательное поле',
 		minLength: {
 			value: 3,
 			message: 'Допустимое количество символов не менее 3',
@@ -49,6 +51,7 @@ export const ReactHookForm = () => {
 	}
 
 	const repeatPasswordProps = {
+		required: 'Обязательное поле',
 		validate: (value) => {
 			if (watch('password') !== value) {
 				return 'Пароли не совпадают'
