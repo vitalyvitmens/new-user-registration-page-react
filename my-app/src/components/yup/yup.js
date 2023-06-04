@@ -106,7 +106,7 @@ export const Yup = () => {
 			<form className={styles.form} onSubmit={onSubmit}>
 				{emailError && <div className={styles.errorLabel}>{emailError}</div>}
 				<input
-					type="text"
+					type="email"
 					name="email"
 					value={email}
 					placeholder="Email"

@@ -73,7 +73,7 @@ export const ReactHookForm = () => {
 			<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
 				{emailError && <div className={styles.errorLabel}>{emailError}</div>}
 				<input
-					type="text"
+					type="email"
 					name="email"
 					placeholder="Email"
 					{...register('email', emailProps)}
