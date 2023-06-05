@@ -141,7 +141,6 @@ export const Yup = () => {
 					disabled={
 						!email ||
 						!password ||
-						password === '' ||
 						!repeatPassword ||
 						!!emailError ||
 						!!passwordError

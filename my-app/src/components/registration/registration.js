@@ -130,7 +130,6 @@ export const Registration = () => {
 					disabled={
 						!email ||
 						!password ||
-						password === '' ||
 						!repeatPassword ||
 						!!emailError ||
 						!!passwordError
