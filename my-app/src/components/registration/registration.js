@@ -1,45 +1,72 @@
 import { useState, useRef } from 'react'
 import styles from './registration.module.css'
 
+const initialState = {
+	email: '',
+	emailError: null,
+	password: '',
+	passwordError: null,
+	repeatPassword: '',
+	repeatPasswordError: null,
+}
+
+const useStore = () => {
+	const [state, setState] = useState(initialState)
+
+	return {
+		getState: () => state,
+		updateState: (fieldName, newValue) => {
+			setState({ ...state, [fieldName]: newValue })
+		},
+	}
+}
+
 const sendData = (formData) => {
 	console.log(formData)
 }
 
 export const Registration = () => {
-	const [email, setEmail] = useState('')
-	const [emailError, setEmailError] = useState(null)
-	const [password, setPassword] = useState('')
-	const [passwordError, setPasswordError] = useState(null)
-	const [repeatPassword, setRepeatPassword] = useState('')
-	const [repeatPasswordError, setRepeatPasswordError] = useState(null)
+	const { getState, updateState } = useStore()
+
+	const {
+		email,
+		emailError,
+		password,
+		passwordError,
+		repeatPassword,
+		repeatPasswordError,
+	} = getState()
 
 	const submitButtonRef = useRef(null)
 
 	const onEmailChange = ({ target }) => {
-		setEmail(target.value)
+		updateState('email', target.value)
 
 		let error = null
 		if (target.value.length > 20) {
 			error = 'Допустимое количество символов не более 20'
 		}
 
-		setEmailError(error)
+		updateState('emailError', error)
 	}
 
 	const onEmailBlur = () => {
 		if (email.length < 6) {
-			setEmailError('Допустимое количество символов не менее 6')
+			updateState('emailError', 'Допустимое количество символов не менее 6')
 		} else if (
 			!/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(
 				email
 			)
 		) {
-			setEmailError('Email должен содержать латинские буквы и символы "@" "."')
+			updateState(
+				'emailError',
+				'Email должен содержать латинские буквы и символы "@" "."'
+			)
 		}
 	}
 
 	const onPasswordChange = ({ target }) => {
-		setPassword(target.value)
+		updateState('password', target.value)
 
 		let error = null
 		if (password) {
@@ -49,20 +76,24 @@ export const Registration = () => {
 				submitButtonRef.current.focus()
 			}
 
-			setPasswordError(error)
+			updateState('passwordError', error)
 		}
 	}
 
 	const onPasswordBlur = () => {
 		if (password) {
 			if (password.length < 3) {
-				setPasswordError('Допустимое количество символов не менее 3')
+				updateState(
+					'passwordError',
+					'Допустимое количество символов не менее 3'
+				)
 			} else if (
 				!/^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,20}$/.test(
 					password
 				)
 			) {
-				setPasswordError(
+				updateState(
+					'passwordError',
 					'Пароль должен содержать от 6 до 20 символов, иметь хотя бы одну цифру, один спецсимвол, одну латинскую букву в нижнем регистре и одну в верхнем регистре'
 				)
 			}
@@ -70,7 +101,7 @@ export const Registration = () => {
 	}
 
 	const onRepeatPasswordChange = ({ target }) => {
-		setRepeatPassword(target.value)
+		updateState('repeatPassword', target.value)
 
 		let error = null
 		if (target.value) {
@@ -80,13 +111,13 @@ export const Registration = () => {
 				submitButtonRef.current.focus()
 			}
 
-			setRepeatPasswordError(error)
+			updateState('repeatPasswordError', error)
 		}
 	}
 
 	const onSubmit = (e) => {
 		e.preventDefault()
-		sendData({ email, password })
+		sendData(getState())
 	}
 
 	return (
