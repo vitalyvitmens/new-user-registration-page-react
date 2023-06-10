@@ -1,0 +1,17 @@
+.red {
+	color: red;
+	font-size: 2rem;
+	font-weight: 500;
+	border: 5px, solid, white;
+	display: flex;
+	justify-content: center;
+}
+
+.white {
+	color: white;
+	font-size: 2rem;
+	font-weight: 500;
+	border: 5px, solid, rgb(16, 14, 14);
+	display: flex;
+	justify-content: center;
+}

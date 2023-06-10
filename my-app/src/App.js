@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import styles from './app.module.css'
 import { onBlur, onChange, onSubmit } from './handlers'
+import { DateComponent } from './components/date-component'
 
 export const App = () => {
 	const [email, setEmail] = useState('')
@@ -73,6 +74,7 @@ export const App = () => {
 					</form>
 				</div>
 			</div>
+			<DateComponent />
 		</>
 	)
 }
