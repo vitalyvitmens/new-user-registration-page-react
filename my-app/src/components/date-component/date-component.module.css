@@ -1,5 +1,6 @@
 .red {
 	color: red;
+  margin-top: 10px;
 	font-size: 2rem;
 	font-weight: 500;
 	border: 5px, solid, white;
