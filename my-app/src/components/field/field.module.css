@@ -1,0 +1,13 @@
+.errorLabel {
+	display: flex;
+
+	width: 205px;
+	padding: 5px;
+	margin: auto;
+	color: red;
+	font-size: 0.75rem;
+	font-weight: bold;
+	background-color: rgb(252, 252, 179);
+	border: 2px solid red;
+	border-radius: 10px;
+}
