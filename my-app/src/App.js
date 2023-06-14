@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Field } from './components'
 import {
 	emailValidator,
@@ -12,22 +12,36 @@ export const App = () => {
 	const [password, setPassword] = useState('')
 	const [passcheck, setPasscheck] = useState('')
 
-	const [isEmailValide, setIsEmailValide] = useState(false)
-	const [isPasswordValide, setIsPasswordValide] = useState(false)
-	const [isPasscheckValide, setIsPasscheckValide] = useState(false)
+	const [isEmailValid, setIsEmailValid] = useState(false)
+	const [isPasswordValid, setIsPasswordValid] = useState(false)
+	const [isPasscheckValid, setIsPasscheckValid] = useState(false)
 
-	const isFormValide = isEmailValide && isPasswordValide && isPasscheckValide
+	const submitButtonRef = useRef(null)
+
+	const onSubmit = (event) => {
+		event.preventDefault()
+		console.log({ email, password })
+	}
+
+	const isFormValid = isEmailValid && isPasswordValid && isPasscheckValid
+
+	useEffect(() => {
+		if (isFormValid) {
+			submitButtonRef.current.focus()
+		}
+	}, [isFormValid])
 
 	return (
 		<div className={styles.app}>
 			<div className={styles.authFormContainer}>
-				<form className={styles.form}>
+				<form className={styles.form} onSubmit={onSubmit}>
 					<Field
 						type="email"
 						name={email}
 						placeholder="Почта..."
 						value={email}
 						setValue={setEmail}
+						setIsValid={setIsEmailValid}
 						validators={[emailValidator]}
 					/>
 					<Field
@@ -36,23 +50,27 @@ export const App = () => {
 						placeholder="Пароль..."
 						value={password}
 						setValue={setPassword}
+						setIsValid={setIsPasswordValid}
 						validators={[passwordMinValidator, passwordSymbolsValidator]}
 					/>
 					<Field
 						type="password"
 						name={passcheck}
 						placeholder="Повтор пароля..."
-						value={password}
+						value={passcheck}
 						setValue={setPasscheck}
+						setIsValid={setIsPasscheckValid}
 						validators={[
 							(value) => (value === password ? null : 'Пароли не совпадают'),
 						]}
-						dependencies={['password']}
+						dependencies={{ password }}
+						forceValidation={(value) => value.length > 0}
 					/>
 					<button
 						className={styles.button}
 						type="submit"
-						disabled={!isFormValide}
+						disabled={!isFormValid}
+						ref={submitButtonRef}
 					>
 						Зарегистрироваться
 					</button>
