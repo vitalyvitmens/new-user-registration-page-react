@@ -1,8 +1,8 @@
 .errorLabel {
 	display: flex;
-	width: 200px;
-	padding: 1rem;
 	margin: auto;
+	padding: 1rem;
+	width: 200px;
 	color: red;
 	font-size: 0.75rem;
 	font-weight: bold;
